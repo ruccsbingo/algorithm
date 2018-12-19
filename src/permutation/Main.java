@@ -10,24 +10,25 @@ public class Main {
     static Map<String, Boolean> exist = new HashMap<>();
     public static void main(String args[]){
         Scanner cin = new Scanner(System.in);
-        List<Integer> data = new ArrayList<>();
+        int n = cin.nextInt();
+        int k = cin.nextInt();
+
+        int[] data = new int[n];
+//        List<Integer> data = new ArrayList<>();
 //        data.add(1);
 //        data.add(2);
 //        data.add(3);
 //        data.add(4);
 
-        int n = cin.nextInt();
-        int k = cin.nextInt();
-
         for (int i=0; i<n; i++) {
-            data.add(cin.nextInt());
+            data[i] = cin.nextInt();
         }
 
         long start = System.currentTimeMillis();
 
         List<Integer> l = new ArrayList<>();
 //        permutation(k,1, data, l);
-        permutation(k, 0, data.size()-1, data);
+        permutation(k, 0, data.length-1, data);
         Map<Integer, Integer> duplicatedMap = duplicatedNumber(data);
         addDuplicated(duplicatedMap);
 
@@ -36,7 +37,7 @@ public class Main {
         System.out.println(num);
     }
 
-    static void permutation(int k, int start, int end, List<Integer> data) {
+    static void permutation(int k, int start, int end, int[] data) {
         if (start == end) {
             if (isValid(k, data)) {
                 if (!isExist(data)) {
@@ -54,14 +55,14 @@ public class Main {
         }
     }
 
-    static void swap(List<Integer> data, int start, int end) {
-        int tmp = data.get(start);
-        data.set(start, data.get(end));
-        data.set(end, tmp);
+    static void swap(int[] data, int start, int end) {
+        int tmp = data[start];
+        data[start] = data[end];
+        data[end] = tmp;
     }
 
-    static void permutation(int k, int n, List<Integer> data, List<Integer> l) {
-        if (l.size() == data.size()) {
+    static void permutation(int k, int n, List<Integer> data, int[] l) {
+        if (l.length == data.size()) {
             if (isValid(k, l)) {
                 if (!isExist(l)) {
                     num++;
@@ -71,9 +72,9 @@ public class Main {
             return;
         }
         for (int i=0; i<n; i++) {
-            l.add(i, data.get(n-1));
+//            l.add(i, data.get(n-1));
             permutation(k,n+1, data, l);
-            l.remove(i);
+//            l.remove(i);
         }
     }
 
@@ -93,19 +94,19 @@ public class Main {
         return result;
     }
 
-    static Map<Integer, Integer> duplicatedNumber(List<Integer> l) {
+    static Map<Integer, Integer> duplicatedNumber(int[] l) {
         Map<Integer, Integer> result = new HashMap<>();
-        for (int i=0; i<l.size(); i++) {
-            if (result.containsKey(l.get(i))) {
-                result.put(l.get(i), result.get(l.get(i)) + 1);
+        for (int i=0; i<l.length; i++) {
+            if (result.containsKey(l[i])) {
+                result.put(l[i], result.get(l[i]) + 1);
             } else {
-                result.put(l.get(i), 1);
+                result.put(l[i], 1);
             }
         }
         return result;
     }
 
-    static boolean isExist(List<Integer> l) {
+    static boolean isExist(int[] l) {
         List<String> signatures = signature(l);
         for (int i=0; i<signatures.size(); i++) {
             if (exist.containsKey(signatures.get(i))) {
@@ -118,19 +119,19 @@ public class Main {
         return false;
     }
 
-    static List<String> signature(List<Integer> l){
+    static List<String> signature(int[] l){
         int max = -1;
 //        int position = -1;
-        for (int i=0; i<l.size(); i++){
-            if (max < l.get(i)) {
-                max = l.get(i);
+        for (int i=0; i<l.length; i++){
+            if (max < l[i]) {
+                max = l[i];
 //                position = i;
             }
         }
 
         List<Integer> posArray = new ArrayList<>();
-        for (int i=0; i<l.size(); i++) {
-            if (l.get(i) == max) {
+        for (int i=0; i<l.length; i++) {
+            if (l[i] == max) {
                 posArray.add(i);
             }
         }
@@ -139,9 +140,9 @@ public class Main {
         for (int j=0; j<posArray.size(); j++) {
             String result = "";
             int position = posArray.get(j);
-            for (int i=0; i<l.size(); i++) {
-                int p = (position + i + l.size()) % l.size();
-                result += l.get(p) + ",";
+            for (int i=0; i<l.length; i++) {
+                int p = (position + i + l.length) % l.length;
+                result += l[p] + ",";
             }
             signatures.add(result);
         }
@@ -149,13 +150,13 @@ public class Main {
         return signatures;
     }
 
-    static boolean isValid(int k, List<Integer> l) {
-        for (int i=0; i<l.size()-1; i++){
-            if (Math.abs(l.get(i)-l.get(i+1)) > k) {
+    static boolean isValid(int k, int[] l) {
+        for (int i=0; i<l.length-1; i++){
+            if (Math.abs(l[i]-l[i+1]) > k) {
                 return false;
             }
         }
-        if (Math.abs(l.get(0) - l.get(l.size()-1)) > k) {
+        if (Math.abs(l[0] - l[l.length-1]) > k) {
             return false;
         }
         return true;
